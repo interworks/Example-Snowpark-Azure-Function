@@ -8,7 +8,7 @@ import azure.functions as func
 
 ## Import shared packages
 
-from ..shared.interworks_snowpark.interworks_snowpark_python.snowpark_session_builder import build_snowpark_session_via_environment_variables as build_snowpark_session
+from ..submodules.interworks_snowpark.interworks_snowpark_python.snowpark_session_builder import build_snowpark_session_via_environment_variables as build_snowpark_session
 
 ## Define main function for Azure
 def main(req: func.HttpRequest) -> func.HttpResponse:
