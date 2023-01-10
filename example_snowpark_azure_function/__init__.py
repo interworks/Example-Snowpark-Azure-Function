@@ -6,8 +6,10 @@
 import logging
 import azure.functions as func
 
-## Import shared packages
+## Import other packages
+import pandas
 
+## Import shared packages
 from ..submodules.interworks_snowpark.interworks_snowpark_python.snowpark_session_builder import build_snowpark_session_via_environment_variables as build_snowpark_session
 
 ## Define main function for Azure
@@ -19,16 +21,16 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     ### Create Snowflake Snowpark session 
     snowpark_session = build_snowpark_session()
 
-    ### Execute various SQL commands
-    snowpark_session.sql("CREATE WAREHOUSE IF NOT EXISTS GENERAL").collect()
-    snowpark_session.sql("USE SCHEMA CONTROL_TABLE_EXAMPLE").collect()
-
-    ### Execute a SQL command and store the results in a pandas dataframe
-    sf_df_results = snowpark_session.sql("SELECT * FROM CONTROL_TABLE").collect()
-    df_results = sf_df_results.to_pandas()
+    ### Execute a SQL command to view the databases in Snowflake
+    ### and convert the results in a pandas dataframe
+    sf_df_databases = snowpark_session.sql("SHOW DATABASES")
+    df_databases = pandas.DataFrame(data=sf_df_databases.collect())
 
     ### Close the Snowflake Snowpark Session
     snowpark_session.close()
+    
+    logging.info('df_databases:')
+    logging.info(df_databases)
 
     return func.HttpResponse(f"Complete")
 
