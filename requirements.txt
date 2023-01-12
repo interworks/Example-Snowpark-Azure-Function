@@ -6,3 +6,4 @@ azure-functions
 numpy
 pandas
 snowflake-snowpark-python[pandas]
+cryptography==38.0.4 # v39 dropped support that snowflake-snowpark-python relies on

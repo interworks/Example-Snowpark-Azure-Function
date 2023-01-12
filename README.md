@@ -10,6 +10,7 @@ This is a basic example of an Azure function that leverages a connection to Snow
   - [Shared InterWorks Snowpark Package](#shared-interworks-snowpark-package)
   - [Azure Functions](#azure-functions)
     - [Azure App Settings](#azure-app-settings)
+    - [Azure Function: example\_snowpark\_azure\_function](#azure-function-example_snowpark_azure_function)
       - [Azure App Setting: SNOWFLAKE\_ACCOUNT](#azure-app-setting-snowflake_account)
       - [Azure App Setting: SNOWFLAKE\_DEFAULT\_DATABASE](#azure-app-setting-snowflake_default_database)
       - [Azure App Setting: SNOWFLAKE\_DEFAULT\_SCHEMA](#azure-app-setting-snowflake_default_schema)
@@ -18,6 +19,7 @@ This is a basic example of an Azure function that leverages a connection to Snow
       - [Azure App Setting: SNOWFLAKE\_USER](#azure-app-setting-snowflake_user)
       - [Azure App Setting: SNOWFLAKE\_PRIVATE\_KEY\_PLAIN\_TEXT](#azure-app-setting-snowflake_private_key_plain_text)
       - [Azure App Setting: SNOWFLAKE\_PRIVATE\_KEY\_PASSPHRASE](#azure-app-setting-snowflake_private_key_passphrase)
+      - [Azure App Setting: SNOWFLAKE\_PASSWORD](#azure-app-setting-snowflake_password)
 
 ## Shared InterWorks Snowpark Package
 
@@ -30,6 +32,10 @@ This project leverages Azure Functions to trigger and execute Python scripts. To
 ### Azure App Settings
 
 When deployed to Azure, this project relies on the following environment variables which should be [configured as App Settings](https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal):
+
+### Azure Function: example_snowpark_azure_function
+
+This function is triggered directly using http and is not intended to be run regularly. The function simply establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings. Most notably, this particular function expects the Snowflake user's private key or password to be stored as plain text in the Azure App Settings.
 
 #### Azure App Setting: SNOWFLAKE_ACCOUNT
 
@@ -57,8 +63,12 @@ This is the service account accessing Snowflake. This will be authenticated leve
 
 #### Azure App Setting: SNOWFLAKE_PRIVATE_KEY_PLAIN_TEXT
 
-This is the private key used to authenticate the user in Snowflake. This is only stored as plain text as this is a simple example, however it is advised to leveraged managed identities and secrets vaults to access and store private keys.
+This is the optional private key used to authenticate the user in Snowflake. This is only stored as plain text as this is a simple example, however it is advised to leverage managed identities and secrets vaults to access and store private keys.
 
 #### Azure App Setting: SNOWFLAKE_PRIVATE_KEY_PASSPHRASE
 
-This is the optional private key passphrase that pairs with the private key. As with the private key, this is only stored as plain text as this is a simple example. It is advised to leveraged managed identities and secrets vaults to access and store private keys.
+This is the optional private key passphrase that pairs with the private key. As with the private key, this is only stored as plain text as this is a simple example. It is advised to leverage managed identities and secrets vaults to access and store private keys.
+
+#### Azure App Setting: SNOWFLAKE_PASSWORD
+
+This is the optional password used to authenticate the user in Snowflake. This will only be leveraged if a private key is not provided. This is only stored as plain text as this is a simple example, however it is advised to leverage private keys instead of passwords, along with managed identities and secrets vaults to access and store the private keys.

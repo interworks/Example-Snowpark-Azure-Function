@@ -8,6 +8,7 @@ import azure.functions as func
 
 ## Import other packages
 import pandas
+import json
 
 ## Import shared packages
 from ..submodules.interworks_snowpark.interworks_snowpark_python.snowpark_session_builder import build_snowpark_session_via_environment_variables as build_snowpark_session
@@ -25,14 +26,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     ### and convert the results in a pandas dataframe
     sf_df_databases = snowpark_session.sql("SHOW DATABASES")
     df_databases = pandas.DataFrame(data=sf_df_databases.collect())
-
     ### Close the Snowflake Snowpark Session
     snowpark_session.close()
     
     logging.info('df_databases:')
     logging.info(df_databases)
+    
+    ### Retrieve list of database names
 
-    return func.HttpResponse(f"Complete")
+    list_database_names = df_databases["name"].to_list()
+    logging.info('list_database_names:')
+    logging.info(list_database_names)
+
+    return func.HttpResponse(json.dumps(list_database_names))
 
   except Exception as e:
     
