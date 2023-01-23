@@ -25,7 +25,7 @@ A collection of basic examples of Azure functions that leverage a connection to 
 
 ## Shared InterWorks Snowpark Package
 
-To simplify creating Snowpark sessions for the enclosed scripts, a custom module called "interworks_snowpark" has been used. This is contained in the "shared/interworks_snowpark" subdirectory. More details can be found in the [InterWorks Snowflake Python Functionality GitHub repository](https://github.com/interworks/Snowflake-Python-Functionality). This repository also contains instructions on how to configure your local environment for Snowpark for Python, and pairs well with this [Definitive Guide to Snowflake Sessions with Snowpark for Python](https://interworks.com/blog/2022/09/02/a-definitive-guide-to-snowflake-sessions-with-snowpark-for-python/).
+To simplify creating Snowpark sessions for the enclosed scripts, a custom module called "interworks_snowpark" has been used. This is contained in the "shared/interworks_snowpark" subdirectory. More details can be found in the [InterWorks Snowpark for Python GitHub repository](https://github.com/interworks/InterWorks-Snowpark-for-Python). This repository also contains instructions on how to configure your local environment for Snowpark for Python, and pairs well with this [Definitive Guide to Snowflake Sessions with Snowpark for Python](https://interworks.com/blog/2022/09/02/a-definitive-guide-to-snowflake-sessions-with-snowpark-for-python/).
 
 ## Azure Functions
 
