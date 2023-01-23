@@ -6,12 +6,13 @@
 import logging
 import azure.functions as func
 
+## Import Snowpark session module
+from snowflake.snowpark import Session
+
 ## Import other packages
+import os
 import pandas
 import json
-
-## Import shared packages
-from ..submodules.interworks_snowpark.interworks_snowpark_python.snowpark_session_builder import build_snowpark_session_via_environment_variables as build_snowpark_session
 
 ## Define main function for Azure
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -19,21 +20,30 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
   
   try:
 
+    ### Retrieve connection parameters from app settings
+    snowflake_connection_parameters = {
+        "account": os.getenv("SNOWFLAKE_ACCOUNT")
+      , "user": os.getenv("SNOWFLAKE_USER")
+      , "password": os.getenv("SNOWFLAKE_PASSWORD")
+      , "role": os.getenv("SNOWFLAKE_ROLE")
+      , "warehouse": os.getenv("SNOWFLAKE_WAREHOUSE")
+    }
+
     ### Create Snowflake Snowpark session 
-    snowpark_session = build_snowpark_session()
+    snowpark_session = Session.builder.configs(snowflake_connection_parameters).create()
 
     ### Execute a SQL command to view the databases in Snowflake
     ### and convert the results in a pandas dataframe
     sf_df_databases = snowpark_session.sql("SHOW DATABASES")
     df_databases = pandas.DataFrame(data=sf_df_databases.collect())
+
     ### Close the Snowflake Snowpark Session
     snowpark_session.close()
     
     logging.info('df_databases:')
     logging.info(df_databases)
     
-    ### Retrieve list of database names
-
+    ### Retrieve and return list of database names
     list_database_names = df_databases["name"].to_list()
     logging.info('list_database_names:')
     logging.info(list_database_names)
