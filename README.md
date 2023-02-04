@@ -10,6 +10,7 @@ A collection of basic examples of Azure functions that leverage a connection to 
   - [Shared InterWorks Snowpark Package](#shared-interworks-snowpark-package)
   - [Azure Functions](#azure-functions)
     - [Azure App Settings](#azure-app-settings)
+      - [Azure App Setting: AZURE\_KEY\_VAULT\_NAME](#azure-app-setting-azure_key_vault_name)
       - [Azure App Setting: SNOWFLAKE\_ACCOUNT](#azure-app-setting-snowflake_account)
       - [Azure App Setting: SNOWFLAKE\_DEFAULT\_DATABASE](#azure-app-setting-snowflake_default_database)
       - [Azure App Setting: SNOWFLAKE\_DEFAULT\_SCHEMA](#azure-app-setting-snowflake_default_schema)
@@ -34,6 +35,10 @@ This project leverages Azure Functions to trigger and execute Python scripts. To
 ### Azure App Settings
 
 When deployed to Azure, this project relies on the following environment variables which should be [configured as App Settings](https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal):
+
+#### Azure App Setting: AZURE_KEY_VAULT_NAME
+
+This is the key vault in Azure which securely stores authentication keys and passwords.
 
 #### Azure App Setting: SNOWFLAKE_ACCOUNT
 
