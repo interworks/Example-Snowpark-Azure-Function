@@ -7,7 +7,7 @@
 import logging
 import azure.functions as func
 from azure.keyvault.secrets import SecretClient
-from azure.identity import ManagedIdentityCredential
+from azure.identity import DefaultAzureCredential
 
 ## Import Snowpark session module
 from snowflake.snowpark import Session
@@ -31,8 +31,8 @@ def retrieve_password_from_key_vault() :
   snowflake_password_secret_name = os.getenv("SNOWFLAKE_PASSWORD_SECRET_NAME")
 
   ### Leverage managed identity to retrieve key vault secrets client
-  managed_identity_credential = ManagedIdentityCredential()
-  secret_client = SecretClient(vault_url=key_vault_uri, credential=managed_identity_credential)
+  default_azure_credential = DefaultAzureCredential()
+  secret_client = SecretClient(vault_url=key_vault_uri, credential=default_azure_credential)
 
   ### Retrieve the secret password from the key vault
   snowflake_password = secret_client.get_secret(snowflake_password_secret_name).value

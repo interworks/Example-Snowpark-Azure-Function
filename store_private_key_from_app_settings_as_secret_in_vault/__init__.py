@@ -3,14 +3,14 @@
 # three app settings and uses them to create a secret value
 # in Azure key vault:
 # - AZURE_KEY_VAULT_NAME
-# - SNOWFLAKE_USER - This will act as the name of the secret in the Azure key vault
+# - SNOWFLAKE_USER - This will identify the relevant secret in the Azure key vault
 # - SNOWFLAKE_PRIVATE_KEY_PLAIN_TEXT
 
 ## Import Azure packages
 import logging
 import azure.functions as func
 from azure.keyvault.secrets import SecretClient
-from azure.identity import ManagedIdentityCredential
+from azure.identity import DefaultAzureCredential
 
 ## Import other packages
 import os
@@ -42,8 +42,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     snowflake_private_key_plain_text = os.getenv("SNOWFLAKE_PRIVATE_KEY_PLAIN_TEXT")
 
     ## Leverage managed identity to retrieve key vault secrets client
-    managed_identity_credential = ManagedIdentityCredential()
-    secret_client = SecretClient(vault_url=key_vault_uri, credential=managed_identity_credential)
+    default_azure_credential = DefaultAzureCredential()
+    secret_client = SecretClient(vault_url=key_vault_uri, credential=default_azure_credential)
 
     ## Retrieve the secret password from the key vault
     secret_client.set_secret(protected_private_key_secret_name, snowflake_private_key_plain_text, content_type="private key")
