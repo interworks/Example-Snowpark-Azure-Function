@@ -27,11 +27,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     key_vault_uri = f"https://{key_vault_name}.vault.azure.net"
 
     ## Retrieve secret name from app settings.
+    snowflake_user = os.getenv("SNOWFLAKE_USER")
+
+    ### Create name of desired secret
+    private_key_secret_name = f"{snowflake_user}__private_key"
+
     ## Replace underscores with hyphens, as underscores
     ## are expected in Snowflake service account usernames
     ## but secrets in key vault cannot contain underscores
-    snowflake_user = os.getenv("SNOWFLAKE_USER")
-    protected_snowflake_user = snowflake_user.replace("_", "-")
+    protected_private_key_secret_name = private_key_secret_name.replace("_", "-")
 
     ## Retrieve new secret value, which is the
     ## private key in multi-line form
@@ -42,7 +46,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     secret_client = SecretClient(vault_url=key_vault_uri, credential=managed_identity_credential)
 
     ## Retrieve the secret password from the key vault
-    secret_client.set_secret(protected_snowflake_user, snowflake_private_key_plain_text)
+    secret_client.set_secret(protected_private_key_secret_name, snowflake_private_key_plain_text, content_type="private key")
 
     return func.HttpResponse("Success")
 
