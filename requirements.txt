@@ -8,3 +8,4 @@ pandas
 snowflake-snowpark-python[pandas]
 azure.keyvault
 azure.identity
+azure.storage.blob

@@ -11,6 +11,9 @@ A collection of basic examples of Azure functions that leverage a connection to 
   - [Azure Functions](#azure-functions)
     - [Azure App Settings](#azure-app-settings)
       - [Azure App Setting: AZURE\_KEY\_VAULT\_NAME](#azure-app-setting-azure_key_vault_name)
+      - [Azure App Setting: AZURE\_STORAGE\_IDENTITY\_\_blobServiceUri](#azure-app-setting-azure_storage_identity__blobserviceuri)
+      - [Azure App Setting: AZURE\_STORAGE\_IDENTITY\_\_credential](#azure-app-setting-azure_storage_identity__credential)
+      - [Azure App Setting: AZURE\_STORAGE\_IDENTITY\_\_queueServiceUri](#azure-app-setting-azure_storage_identity__queueserviceuri)
       - [Azure App Setting: SNOWFLAKE\_ACCOUNT](#azure-app-setting-snowflake_account)
       - [Azure App Setting: SNOWFLAKE\_DEFAULT\_DATABASE](#azure-app-setting-snowflake_default_database)
       - [Azure App Setting: SNOWFLAKE\_DEFAULT\_SCHEMA](#azure-app-setting-snowflake_default_schema)
@@ -22,7 +25,12 @@ A collection of basic examples of Azure functions that leverage a connection to 
       - [Azure App Setting: SNOWFLAKE\_PASSWORD](#azure-app-setting-snowflake_password)
     - [Azure Function: connection\_leveraging\_app\_settings\_directly](#azure-function-connection_leveraging_app_settings_directly)
     - [Azure Function: connection\_leveraging\_app\_settings\_directly\_with\_private\_key](#azure-function-connection_leveraging_app_settings_directly_with_private_key)
+    - [Azure Function: connection\_leveraging\_app\_settings\_directly\_with\_vault\_secrets](#azure-function-connection_leveraging_app_settings_directly_with_vault_secrets)
     - [Azure Function: connection\_leveraging\_interworks\_submodule](#azure-function-connection_leveraging_interworks_submodule)
+    - [Azure Function: connection\_leveraging\_interworks\_submodule\_with\_vault\_secrets](#azure-function-connection_leveraging_interworks_submodule_with_vault_secrets)
+    - [Azure Function: azure\_storage\_trigger\_leveraging\_app\_settings\_directly](#azure-function-azure_storage_trigger_leveraging_app_settings_directly)
+    - [Azure Function: azure\_storage\_trigger\_leveraging\_app\_settings\_directly\_with\_vault\_secrets](#azure-function-azure_storage_trigger_leveraging_app_settings_directly_with_vault_secrets)
+    - [Azure Function: azure\_storage\_trigger\_leveraging\_interworks\_submodule\_with\_vault\_secrets](#azure-function-azure_storage_trigger_leveraging_interworks_submodule_with_vault_secrets)
 
 ## Shared InterWorks Snowpark Package
 
@@ -39,6 +47,24 @@ When deployed to Azure, this project relies on the following environment variabl
 #### Azure App Setting: AZURE_KEY_VAULT_NAME
 
 This is the key vault in Azure which securely stores authentication keys and passwords.
+
+#### Azure App Setting: AZURE_STORAGE_IDENTITY__blobServiceUri
+
+This app setting is part of a series of settings that instruct the Azure function to leverage its own managed identity when connecting to the storage container. Specifically, this is the URI of the storage account that contains the container.
+
+Original value: `https://my-storage-account.blob.core.windows.net`
+
+#### Azure App Setting: AZURE_STORAGE_IDENTITY__credential
+
+This app setting is part of a series of settings that instruct the Azure function to leverage its own managed identity when connecting to the storage container and queue. Specifically, this app setting instructs the use of managed identity.
+
+Original value: `managedidentity`
+
+#### Azure App Setting: AZURE_STORAGE_IDENTITY__queueServiceUri
+
+This app setting is part of a series of settings that instruct the Azure function to leverage its own managed identity when connecting to the storage queue. Specifically, this is the URI of the storage account that contains the queue.
+
+Original value: `https://my-storage-account.queue.core.windows.net`
 
 #### Azure App Setting: SNOWFLAKE_ACCOUNT
 
@@ -84,6 +110,28 @@ This function is triggered directly using http and is not intended to be run reg
 
 This function is triggered directly using http and is not intended to be run regularly. The function simply establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings. Most notably, this particular function expects the Snowflake user's private key to be provided as plain text in the Azure App Settings.
 
+### Azure Function: connection_leveraging_app_settings_directly_with_vault_secrets
+
+This function is triggered directly using http and is not intended to be run regularly. The function simply establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings. Most notably, this particular function expects the Snowflake user's private key to be stored as a secret in an Azure key vault.
+
 ### Azure Function: connection_leveraging_interworks_submodule
 
 This function is triggered directly using http and is not intended to be run regularly. The function simply establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings. Most notably, this particular function leverages the "interworks_snowpark" submodule and can accept either the Snowflake user's private key or their password, which should be provided as plain text in the Azure App Settings.
+
+### Azure Function: connection_leveraging_interworks_submodule_with_vault_secrets
+
+This function is triggered directly using http and is not intended to be run regularly. The function simply establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings. Most notably, this particular function leverages the "interworks_snowpark" submodule and leverages a private key stored as a secret in an Azure key vault.
+
+This function is triggered directly using http and is not intended to be run regularly. The function simply establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings. Most notably, this particular function expects the Snowflake user's private key to be provided as plain text in the Azure App Settings.
+
+### Azure Function: azure_storage_trigger_leveraging_app_settings_directly
+
+This function is triggered by a queued message when a file is uploaded to a storage container. The function downloads the file from blob storage, expected in JSON format, and extracts a SQL statement from it. The function then establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings, and executes the SQL statement. Most notably, this particular function expects the Snowflake user's password to be stored as plain text in the Azure App Settings.
+
+### Azure Function: azure_storage_trigger_leveraging_app_settings_directly_with_vault_secrets
+
+This function is triggered by a queued message when a file is uploaded to a storage container. The function downloads the file from blob storage, expected in JSON format, and extracts a SQL statement from it. The function then establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings, and executes the SQL statement. Most notably, this particular function expects the Snowflake user's private key to be stored as a secret in an Azure key vault.
+
+### Azure Function: azure_storage_trigger_leveraging_interworks_submodule_with_vault_secrets
+
+This function is triggered by a queued message when a file is uploaded to a storage container. The function downloads the file from blob storage, expected in JSON format, and extracts a SQL statement from it. The function then establishes a connection to Snowflake using Snowpark for Python, leveraging the connection variables directly from the Azure App Settings, and executes the SQL statement. Most notably, this particular function leverages the "interworks_snowpark" submodule and can accept either the Snowflake user's private key or their password, which should be provided as plain text in the Azure App Settings.
